@@ -1,5 +1,10 @@
-document.querySelector("form").addEventListener("submit", function(e){
-    e.preventDefault();
+const toggle = document.getElementById("chat-toggle");
+const chatBox = document.getElementById("chat-box");
 
-    alert("Thank you for contacting MM Media! We will get back to you soon.");
+toggle.addEventListener("click", () => {
+    if(chatBox.style.display === "block"){
+        chatBox.style.display = "none";
+    } else {
+        chatBox.style.display = "block";
+    }
 });
