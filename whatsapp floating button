@@ -1,0 +1,28 @@
+```html
+<a
+href="https://wa.me/27796455821"
+class="whatsapp"
+target="_blank">
+
+💬
+
+</a>
+
+<div id="chatbot">
+    <button id="chat-toggle">
+        AI Assistant
+    </button>
+
+    <div id="chat-box">
+        <h3>MM Media Assistant</h3>
+
+        <p>
+            Hi! How can we help your business today?
+        </p>
+
+        <input
+        type="text"
+        placeholder="Type your question...">
+    </div>
+</div>
+```
