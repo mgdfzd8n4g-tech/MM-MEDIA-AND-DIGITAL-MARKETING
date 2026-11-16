@@ -1,2 +1,2 @@
-# MM-MEDIA-AND-DIGITAL-MARKETING
-Official website for MM Media, a South African digital marketing and creative media agency.
+# Valterra Group
+Official website for Valterra Group, a South African 
