@@ -1,77 +1,268 @@
 
-// =================================
-// VALTERRA GROUP
-// WEBSITE INTERACTIONS
-// =================================
+// =====================================
+// VALTERRA GROUP & CO.
+// PREMIUM WEBSITE FUNCTIONALITY
+// =====================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ---------------------------------
+    // MOBILE NAVIGATION
+    // ---------------------------------
+
+    const menuButton = document.querySelector(".menu-toggle");
+    const navigation = document.querySelector(".navigation");
+
+    if (menuButton && navigation) {
+
+        menuButton.setAttribute("aria-expanded", "false");
+
+        menuButton.addEventListener("click", () => {
+
+            const isOpen = navigation.classList.toggle("open");
+
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.textContent = isOpen ? "✕" : "☰";
+
+        });
+
+        navigation.querySelectorAll("a").forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                navigation.classList.remove("open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.textContent = "☰";
+
+            });
+
+        });
+
+        document.addEventListener("keydown", event => {
+
+            if (event.key === "Escape") {
+                navigation.classList.remove("open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.textContent = "☰";
+            }
+
+        });
+
+    }
 
 
-// MOBILE NAVIGATION
+    // ---------------------------------
+    // AUTOMATIC COPYRIGHT YEAR
+    // ---------------------------------
 
-const menuToggle = document.getElementById("menuToggle");
-const navLinks = document.getElementById("navLinks");
+    const yearElement = document.getElementById("year");
 
-menuToggle.addEventListener("click", () => {
-
-    const isOpen = navLinks.classList.toggle("active");
-
-    menuToggle.setAttribute("aria-expanded", isOpen);
-    menuToggle.textContent = isOpen ? "✕" : "☰";
-
-});
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
 
 
-// CLOSE MOBILE MENU AFTER CLICKING
+    // ---------------------------------
+    // SCROLL REVEAL ANIMATIONS
+    // ---------------------------------
 
-document.querySelectorAll(".nav-links a").forEach(link => {
+    const revealElements = document.querySelectorAll(
+        ".service-card, .price-card, .process-item, " +
+        ".about-content, .section-heading, .contact-card"
+    );
 
-    link.addEventListener("click", () => {
+    if ("IntersectionObserver" in window) {
 
-        navLinks.classList.remove("active");
-        menuToggle.textContent = "☰";
-        menuToggle.setAttribute("aria-expanded", "false");
+        const observer = new IntersectionObserver((entries, observer) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+
+                }
+
+            });
+
+        }, {
+            threshold: 0.12,
+            rootMargin: "0px 0px -40px 0px"
+        });
+
+        revealElements.forEach((element, index) => {
+
+            element.classList.add("reveal");
+
+            element.style.transitionDelay =
+                `${(index % 4) * 100}ms`;
+
+            observer.observe(element);
+
+        });
+
+    } else {
+
+        revealElements.forEach(element => {
+            element.classList.add("visible");
+        });
+
+    }
+
+
+    // ---------------------------------
+    // HERO ENTRANCE ANIMATION
+    // ---------------------------------
+
+    const hero = document.querySelector(".hero");
+
+    if (hero) {
+        hero.classList.add("hero-loaded");
+    }
+
+
+    // ---------------------------------
+    // AUTOMATIC PACKAGE SELECTION
+    // ---------------------------------
+
+    const packageButtons = document.querySelectorAll("[data-plan]");
+    const packageInput = document.getElementById("package");
+
+    packageButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const selectedPackage = button.getAttribute("data-plan");
+
+            if (packageInput) {
+                packageInput.value = selectedPackage;
+            }
+
+        });
 
     });
 
-});
+
+    // ---------------------------------
+    // CONTACT FORM
+    // ---------------------------------
+
+    const contactForm = document.getElementById("contactForm");
+
+    if (contactForm) {
+
+        contactForm.addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            const name = document.getElementById("name")?.value.trim() || "";
+            const business = document.getElementById("business")?.value.trim() || "";
+            const email = document.getElementById("email")?.value.trim() || "";
+            const selectedPackage = packageInput?.value || "Not selected";
+            const message = document.getElementById("message")?.value.trim() || "";
+
+            if (!name || !email || !message) {
+                alert("Please complete all required fields.");
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            const subject = encodeURIComponent(
+                "New Business Enquiry - Valterra Group & Co."
+            );
+
+            const body = encodeURIComponent(
+
+                `NEW WEBSITE ENQUIRY
+
+Name: ${name}
+
+Business: ${business}
+
+Email: ${email}
+
+Package: ${selectedPackage}
+
+Message:
+
+${message}
+
+----------------------------
+
+Valterra Group & Co.
+Building Beyond Boundaries.`
+
+            );
+
+            // REPLACE WITH YOUR REAL BUSINESS EMAIL
+
+            const businessEmail = "hello@yourdomain.co.za";
+
+            window.location.href =
+                `mailto:${businessEmail}?subject=${subject}&body=${body}`;
+
+        });
+
+    }
 
 
-// SCROLL REVEAL ANIMATIONS
+    // ---------------------------------
+    // SMOOTH SCROLLING
+    // ---------------------------------
 
-const revealElements = document.querySelectorAll(
-    ".section-heading, .about-grid, .division-card, .approach-points div, .vision h2, .contact-content"
-);
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
 
-revealElements.forEach(element => {
-    element.classList.add("reveal");
-});
+        link.addEventListener("click", event => {
 
-const observer = new IntersectionObserver((entries) => {
+            const targetId = link.getAttribute("href");
 
-    entries.forEach(entry => {
+            if (!targetId || targetId === "#") return;
 
-        if (entry.isIntersecting) {
+            const target = document.querySelector(targetId);
 
-            entry.target.classList.add("visible");
+            if (target) {
 
-            observer.unobserve(entry.target);
+                event.preventDefault();
 
-        }
+                target.scrollIntoView({
+                    behavior: window.matchMedia(
+                        "(prefers-reduced-motion: reduce)"
+                    ).matches ? "auto" : "smooth",
+                    block: "start"
+                });
+
+            }
+
+        });
 
     });
 
-}, {
-    threshold: 0.12
+
+    // ---------------------------------
+    // NAVIGATION SCROLL EFFECT
+    // ---------------------------------
+
+    const header = document.querySelector(".header");
+
+    if (header) {
+
+        const updateHeader = () => {
+            header.classList.toggle("scrolled", window.scrollY > 40);
+        };
+
+        updateHeader();
+
+        window.addEventListener("scroll", updateHeader, {
+            passive: true
+        });
+
+    }
+
 });
 
-revealElements.forEach(element => {
-    observer.observe(element);
-});
-
-
-// FOOTER YEAR
-
-const year = new Date().getFullYear();
-
-document.querySelector(".footer-bottom p").textContent =
-    `© ${year} Valterra Group. All rights reserved.`;
 
